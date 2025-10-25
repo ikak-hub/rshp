@@ -1,0 +1,36 @@
+<x-teemplate title="Manajemen Jenis Hewan - RSHP UNAIR">
+    <div class="page-container">
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nama Jenis Hewan</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($jenisHewan as $index => $hewan)
+                <tr>
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ $hewan->nama_jenis_hewan }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+<style>
+        .page-container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        .page-header { text-align: center; margin-bottom: 20px; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .data-table th, .data-table td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        .data-table th { background-color: #6588e8; color: white; }
+        .action-link { color: #e74c3c; text-decoration: none; font-weight: bold; }
+        .form-container { background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; }
+        .form-group input { width: 100%; padding: 8px; box-sizing: border-box; }
+        .btn-submit { background-color: #2ecc71; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+        .alert { padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .alert-success { background-color: #d4edda; color: #155724; }
+        .alert-error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</x-teemplate>
