@@ -40,12 +40,11 @@ class RasHewanController extends Controller
     protected function validateRasHewan(Request $request, $id = null)
     {
         // data yang bersifat uniq
-        $uniqueRule = $id ?
-        'unique:ras_hewan,nama_ras,'. $id .',idras_hewan': 
-        'unique:ras_hewan,nama_ras';
-
+        $uniqueRule = $id ? 'unique:ras_hewan,nama_ras,'. $id .',idras_hewan' : 'unique:ras_hewan,nama_ras';
+        // dd($request->all());
+        
         // validasi input
-        return $request->validate([
+        return ( $request->validate([
             'nama_ras' => [
                 'required',
                 'string',
@@ -65,7 +64,7 @@ class RasHewanController extends Controller
             'nama_ras.unique' => 'Nama ras hewan sudah ada dalam database.',
             'idjenis_hewan.required' => 'Jenis hewan wajib diisi.',
             'idjenis_hewan.integer' => 'Jenis hewan harus berupa angka.',
-        ]);
+        ]));
     }
     // helper untuk membuat data baru
     protected function createRasHewan(array $data)
@@ -116,8 +115,13 @@ class RasHewanController extends Controller
     // update function
     public function update(Request $request, $id)
     {
-        // validasi input
+
+        //? validasi input
+        //debug dd('its reach me 1');
+        //debug dd($request->all());
         $validatedData = $this->validateRasHewan($request, $id);
+        //debug dd('its reach me 2');
+
 
         try {
             // Eloquent
@@ -137,6 +141,7 @@ class RasHewanController extends Controller
             return redirect()->route('admin.ras-hewan.index')
                             ->with('success', 'Ras hewan berhasil diperbarui.');
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return redirect()->route('admin.ras-hewan.edit', $id)
                             ->with('error', 'Gagal memperbarui ras hewan: ' . $e->getMessage())
                             ->withInput();

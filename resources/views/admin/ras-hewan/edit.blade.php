@@ -5,6 +5,16 @@
         <h1 class="text-center font-bold text-3xl mb-10">Edit Ras Hewan</h1>
         
         <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+            @if ($errors->any())
+                <div class="position-fixed start-50 translate-middle-x mt-3 z-3" id="pop-message-err" style="top: 50px">
+                    <div class="alert alert-danger shadow">
+                        @foreach ($errors->all() as $message)
+                            <strong>{{ $message }}</strong> <br>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             @if (session('error'))
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
                 <strong class="font-bold">Error!</strong>
@@ -24,12 +34,12 @@
                 @method('PUT')
                 
                 <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="nama_ras_hewan">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="nama_ras">
                         Nama Ras Hewan <span class="text-red-500">*</span>
                     </label>
                     <input type="text" 
-                           id="nama_ras_hewan"
-                           name="nama_ras_hewan"
+                           id="nama_ras"
+                           name="nama_ras"
                            value="{{ old('nama_ras_hewan', $rasHewan->nama_ras) }}"
                            placeholder="Masukkan nama ras hewan"
                            class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-blue-500 @error('nama_ras_hewan') border-red-500 @enderror"
