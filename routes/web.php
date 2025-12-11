@@ -89,10 +89,23 @@ Route::middleware('isAdministrator')->group(function(){
 });
 
 // akses resepsionis
+// Route akses resepsionis
 Route::middleware('isResepsionis')->group(function(){
     Route::get('/resepsionis/dashboard', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'index'])->name('resepsionis.dashboard');
-    Route::get('dashboard', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'dashboard'])->name('dashboard');
-    Route::post('dashboard', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'dashboard'])->name('dashboard');
+    
+    // Pet Routes
+    Route::post('/resepsionis/pet/store', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'storePet'])->name('resepsionis.pet.store');
+    Route::put('/resepsionis/pet/{id}', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'updatePet'])->name('resepsionis.pet.update');
+    Route::delete('/resepsionis/pet/{id}', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'destroyPet'])->name('resepsionis.pet.destroy');
+    
+    // Pemilik Routes
+    Route::post('/resepsionis/pemilik/store', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'storePemilik'])->name('resepsionis.pemilik.store');
+    Route::put('/resepsionis/pemilik/{id}', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'updatePemilik'])->name('resepsionis.pemilik.update');
+    Route::delete('/resepsionis/pemilik/{id}', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'destroyPemilik'])->name('resepsionis.pemilik.destroy');
+    
+    // Temu Dokter Routes
+    Route::post('/resepsionis/appointment/store', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'storeAppointment'])->name('resepsionis.appointment.store');
+    Route::put('/resepsionis/appointment/{id}/cancel', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'cancelAppointment'])->name('resepsionis.appointment.cancel');
 });
 
 // akses dokter
