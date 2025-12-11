@@ -66,8 +66,10 @@ Route::middleware('isAdministrator')->group(function(){
 
     //? KODE TINDAKAN TERAPI ?//
     Route::get('/admin/kode-tindakan-terapi', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'index'])->name('admin.kodetindakanterapi.index');
+    Route::get('/admin/kode-tindakan-terapi/{id}', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'get'])->name('getAkodeTindakanTerapi');
     Route::get('/admin/kode-tindakan-terapi/create', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'create'])->name('admin.kodetindakanterapi.create');
     Route::post('/admin/kode-tindakan-terapi/store',[App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'store'])->name('admin.kodetindakanterapi.store');
+    Route::patch('/admin/kode-tindakan-terapi/{id}', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'patch'])->name('admin.kodetindakanterapi.patch');
     Route::delete('/admin/kode-tindakan-terapi/{id}', [App\Http\Controllers\Admin\KodeTindakanTerapiController::class, 'destroy'])->name('admin.kodetindakanterapi.delete');
 
     //? PET ?//
