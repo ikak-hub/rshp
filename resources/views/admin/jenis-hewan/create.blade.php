@@ -8,6 +8,7 @@
             <div class="card">
                 <div class="card-header">
                     <h4>Tambah jenis Hewan (diedit ika)</h4>
+                    <h4>Tambah jenis Hewan (Ditambah Alan)</h4>
                 </div>
 
                 <div class="card-body">
