@@ -121,10 +121,10 @@ class DashboardPemilikController extends Controller
 
             DB::commit();
             return redirect()->back()->with('success', 'Profil berhasil diperbarui');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withErrors(['error' => 'Gagal memperbarui profil: ' . $e->getMessage()]);
-        }
+            } catch (\Exception $e) {
+                DB::rollBack();
+                return redirect()->back()->withErrors(['error' => 'Gagal memperbarui profil: ' . $e->getMessage()]);
+            }
     }
 
     // View detail rekam medis
