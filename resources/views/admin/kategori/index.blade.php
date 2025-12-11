@@ -1,14 +1,4 @@
 <x-teemplate title="Manajemen Kategori - RSHP UNAIR">
-{{-- <div class="mb-3">
-    <h1>Manajemen Data Kategori</h1>
-    <!--tombol tambah kategori baru-->
-    <form action="{{ route('admin.kategori.create') }}" method="GET" style="display: inline;">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tambah Kategori Baru
-        </button>
-    </form>
-</div> --}}
-
 
 <div class="page-container">
     <div class="page-header">
@@ -34,9 +24,9 @@
         <button type="submit" class="btn btn-primary">
             <i class="fas fa-plus"></i> Tambah Kategori Baru
         </button>
-    </form>
-
+        </form>
     </div>
+
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
                 <tr class="bg-gray-100 text-left text-gray-700 uppercase text-sm tracking-wider">
@@ -57,7 +47,7 @@
                         <button type="button" class="btn btn-sm btn-danger" onclick="if(confirm('Apakah Anda yakin ingin menghapus kategori ini?')) { document.getElementById('delete-form-{{ $item->idkategori }}').submit(); }">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
-                        <form id="delete-form-{{ $item->idkategori }}" action="#" method="POST" style="display: none;">
+                        <form id="delete-form-{{ $item->idkategori }}" action="{{ route('admin.kategori.delete', ['id'=> $item->idkategori]) }}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form> 
