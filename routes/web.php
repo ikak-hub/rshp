@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\siteController;
 use Illuminate\Support\Facades\Auth;
 
+Route::get('#')->name('#');
+
 Route::get('/', function () {
     return view('welcome');
 })->name('welcome'); // Rute utama untuk halaman welcome
@@ -50,6 +52,8 @@ Route::middleware('isAdministrator')->group(function(){
     Route::get('/admin/kategori', [App\Http\Controllers\Admin\KategoriController::class, 'index'])->name('admin.kategori.index');
     Route::get('/admin/kategori/create', [App\Http\Controllers\Admin\KategoriController::class, 'create'])->name('admin.kategori.create');
     Route::post('/admin/kategori/store', [App\Http\Controllers\Admin\KategoriController::class, 'store'])->name('admin.kategori.store');
+    Route::get('/admin/kategori/{id}/edit', [App\Http\Controllers\Admin\KategoriController::class, 'edit'])->name('admin.kategori.edit');
+    Route::patch('/admin/kategori/{id}/edit', [App\Http\Controllers\Admin\KategoriController::class, 'patch'])->name('admin.kategori.patch');
     Route::delete('/admin/kategori/{id}', [App\Http\Controllers\Admin\KategoriController::class, 'destroy'])->name('admin.kategori.delete');
 
     //? KATEGORI KLINIS ?//
