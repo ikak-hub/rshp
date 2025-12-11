@@ -32,12 +32,12 @@
 
     <div class="mb-3">
         <!-- Tombol untuk tambah anu -->
-        <form action="{{ route('admin.kategori.create') }}" method="GET" style="display: inline;">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Tambah Kategori Baru
-        </button>
+        <form action="{{ route('admin.kategoriklinis.create') }}" method="GET" style="display: inline;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Tambah Kategori Klinis Baru
+            </button>
         </form>
-    </div>
+    </div>  
 
         <table class="min-w-full bg-white border border-gray-200">
             <thead>
@@ -53,7 +53,7 @@
                     <td class="py-2 px-4 border-b">{{ $index + 1 }}</td>
                     <td class="py-2 px-4 border-b">{{ $item->nama_kategori_klinis }}</td>
                     <td class="py-2 px-4 border-b">
-                        <button type="button" class="btn btn-sm btn-warning" onclick="window.location='#'">
+                        <button type="button" class="btn btn-sm btn-warning" onclick="window.location='{{ route('admin.kategoriklinis.edit', ['id' => $item->idkategori_klinis ]) }}'">
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button type="button" class="btn btn-sm btn-danger" onclick="if(confirm('Apakah Anda yakin ingin menghapus kategori klinis ini?')) { document.getElementById('delete-form-{{ $item->idkategori_klinis }}').submit(); }">

@@ -60,6 +60,8 @@ Route::middleware('isAdministrator')->group(function(){
     Route::get('/admin/kategori-klinis', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'index'])->name('admin.kategoriklinis.index');
     Route::get('/admin/kategori-klinis/create',[App\Http\Controllers\Admin\KategoriKlinisController::class, 'create'])->name('admin.kategoriklinis.create');
     Route::post('/admin/kategori-klinis/store',[App\Http\Controllers\Admin\KategoriKlinisController::class, 'store'])->name('admin.kategoriklinis.store');
+    Route::get('/admin/kategori-klinis/{id}/edit', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'edit'])->name('admin.kategoriklinis.edit');
+    Route::patch('/admin/kategori-klinis/{id}/patch', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'patch'])->name('admin.kategoriklinis.patch');
     Route::delete('/admin/kategori-klinis/{id}', [App\Http\Controllers\Admin\KategoriKlinisController::class, 'destroy'])->name('admin.kategoriklinis.delete');
 
     //? KODE TINDAKAN TERAPI ?//
