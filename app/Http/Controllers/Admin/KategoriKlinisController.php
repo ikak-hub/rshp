@@ -3,11 +3,44 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use DB;
 use Illuminate\Http\Request;
 use App\Models\KategoriKlinis;
 
 class KategoriKlinisController extends Controller
 {
+    public function patch(Request $request, $id) {
+        //? validasi input
+        $validatedData = $this->validateKategoriKlinis($request, $id);
+
+        try {
+            // Eloquent
+            // $rasHewan = RasHewan::findOrFail($id);
+            // $rasHewan->nama_ras = $this->formatNamaRasHewan($validatedData['nama_ras']);
+            // $rasHewan->idjenis_hewan = $validatedData['idjenis_hewan'];
+            // $rasHewan->save();
+
+            // Query Builder
+            DB::table('kategori_klinis')
+                ->where('idkategori_klinis', $id) 
+                ->update([
+                    'nama_kategori_klinis' => $this->formatNamaKategoriKlinis($validatedData['nama_kategori_klinis'])
+                ]);
+
+            return redirect()->route('admin.kategoriklinis.index')
+                            ->with('success', 'Kategori klinis berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // dd($e->getMessage());
+            return redirect()->route('admin.kategoriklinis.edit', $id)
+                            ->with('error', 'Gagal memperbarui Kategori Klinis: ' . $e->getMessage())
+                            ->withInput();
+        }
+    }
+    public function edit(Request $request, $id) {
+        $kategoriKlinis = DB::table('kategori_klinis')->select('*')->where('idkategori_klinis', $id)->first();
+        return view('admin.kategori-klinis.edit', ['kategoriKlinis' => $kategoriKlinis]);
+    }
+
     public function index()
     {
         // Eloquent
