@@ -59,7 +59,7 @@
                         <button type="button" class="btn btn-sm btn-danger" onclick="if(confirm('Apakah Anda yakin ingin menghapus kategori klinis ini?')) { document.getElementById('delete-form-{{ $item->idkategori_klinis }}').submit(); }">
                             <i class="fas fa-trash"></i> Hapus
                         </button>
-                        <form id="delete-form-{{ $item->idkategori_klinis }}" action="#" method="POST" style="display: none;">
+                        <form id="delete-form-{{ $item->idkategori_klinis }}" action="{{ route('admin.kategoriklinis.delete', ['id' => $item->idkategori_klinis ]) }}" method="POST" style="display: none;">
                             @csrf
                             @method('DELETE')
                         </form>

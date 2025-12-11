@@ -118,8 +118,19 @@ class KategoriKlinisController extends Controller
     {
         return trim(ucwords(strtolower($nama)));
     }
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $id = $request->param('id');
+        try {
+            // Query Builder
+            DB::table('kategori_klinis')
+                ->where('idkategori_klinis', $id)
+                ->delete();
+
+            return redirect()->route('admin.kategoriklinis.index')
+                            ->with('success', 'Kategori klinis berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.kategoriklinis.index')
+                            ->with('error', 'Gagal menghapus kategori klinis: ' . $e->getMessage());
+        }
     }
 }
