@@ -122,8 +122,19 @@ class KategoriController extends Controller
     {
         return trim(ucwords(strtolower($nama)));
     }
-    public function destroy(Request $request)
+    public function destroy(Request $request, $id)
     {
-        $id = $request->param('id');
+        try {
+            // Query Builder
+            DB::table('kategori')
+                ->where('idkategori', $id)
+                ->delete();
+
+            return redirect()->route('admin.kategori.index')
+                            ->with('success', 'Kategori berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.kategori.index')
+                            ->with('error', 'Gagal menghapus kategori: ' . $e->getMessage());
+        }
     }
 }
