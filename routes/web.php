@@ -93,7 +93,6 @@ Route::middleware('isAdministrator')->group(function(){
 });
 
 // akses resepsionis
-// Route akses resepsionis
 Route::middleware('isResepsionis')->group(function(){
     Route::get('/resepsionis/dashboard', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'index'])->name('resepsionis.dashboard');
     
@@ -125,6 +124,8 @@ Route::middleware('isPerawat')->group(function(){
 // akses pemilik
 Route::middleware('isPemilik')->group(function(){
     Route::get('/pemilik/dashboard', [App\Http\Controllers\Admin\DashboardPemilikController::class, 'index'])->name('pemilik.dashboard');
+    Route::put('/profile/update', [App\Http\Controllers\Admin\DashboardPemilikController::class, 'updateProfile'])->name('pemilik.profile.update'); 
+    Route::get('/rekam-medis/{idpet}', [App\Http\Controllers\Admin\DashboardPemilikController::class, 'viewRekamMedis'])->name('pemilik.rekammedis.view');
 });
 
 Route::post('/logout', function () {
