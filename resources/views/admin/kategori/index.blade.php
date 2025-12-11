@@ -51,7 +51,7 @@
                     <td class="py-2 px-4 border-b">{{ $index + 1 }}</td>
                     <td class="py-2 px-4 border-b">{{ $item->nama_kategori }}</td>
                     <td class="py-2 px-4 border-b">
-                        <button type="button" class="btn btn-sm btn-warning" onclick="window.location='#'">
+                        <button type="button" class="btn btn-sm btn-warning" onclick="window.location='{{ route('admin.kategori.edit', ['id' => $item->idkategori]) }}'">
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button type="button" class="btn btn-sm btn-danger" onclick="if(confirm('Apakah Anda yakin ingin menghapus kategori ini?')) { document.getElementById('delete-form-{{ $item->idkategori }}').submit(); }">
