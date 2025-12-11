@@ -10,6 +10,39 @@ use Illuminate\Support\Facades\DB; // Import Query Builder from table database
 
 class KategoriController extends Controller
 {
+    public function patch(Request $request, $id){
+        //? validasi input
+        $validatedData = $this->validateKategori($request, $id);
+
+        try {
+            // Eloquent
+            // $rasHewan = RasHewan::findOrFail($id);
+            // $rasHewan->nama_ras = $this->formatNamaRasHewan($validatedData['nama_ras']);
+            // $rasHewan->idjenis_hewan = $validatedData['idjenis_hewan'];
+            // $rasHewan->save();
+
+            // Query Builder
+            DB::table('kategori')
+                ->where('idkategori', $id) 
+                ->update([
+                    'nama_kategori' => $this->formatNamaKategori($validatedData['nama_kategori'])
+                ]);
+
+            return redirect()->route('admin.kategori.index')
+                            ->with('success', 'Kategori berhasil diperbarui.');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return redirect()->route('admin.kategori.edit', $id)
+                            ->with('error', 'Gagal memperbarui Kategori: ' . $e->getMessage())
+                            ->withInput();
+        }
+    }
+    
+    public function edit(Request $request, $id) {
+        $kategori = DB::table('kategori')->select('*')->where('idkategori', $id)->first();
+        return view('admin.kategori.edit', ['kategori' => $kategori]);
+    }
+
     public function index()
     {
         // Eloquent
