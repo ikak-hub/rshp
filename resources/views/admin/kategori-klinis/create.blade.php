@@ -1,9 +1,8 @@
-@extends('layouts.app')
-@section('title', 'Tambah Kategori Klinis - RSHP UNAIR')
-@section('content')
+<x-teemplate title="Tambah Kategori Klinis - RSHP UNAIR">
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">  
+        <h1 class="mt-5 mb-4 text-center">Tambah Kategori Klinis</h1>
+        <!-- <div class="col-md-8">   -->
             <div class="card">
                 <div class="card-header">
                     <h4>Tambah Kategori Klinis</h4>
@@ -46,4 +45,4 @@
         </div>
     </div>
 </div>
-@endsection
+</x-teemplate>

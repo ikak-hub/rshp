@@ -98,7 +98,7 @@
     </style>
 </head>
 
-<x-teemplate title="RSHP - Dashboard">
+<x-template-logout title="RSHP - Dashboard">
  <div class="page-container">
         <div class="page-header">
             <h1>Data Master</h1>
@@ -106,53 +106,53 @@
         </div>
 
         <div class="nav-grid">
-    <a href="{{ route('admin.roleuser.index') }}" class="nav-card">
-        <h3>Data User</h3>
-        <p>Kelola data, peran, dan kata sandi pengguna sistem.</p>
-    </a>
+            <a href="{{ route('admin.roleuser.index') }}" class="nav-card">
+                <h3>Data User</h3>
+                <p>Kelola data, peran, dan kata sandi pengguna sistem.</p>
+            </a>
 
-    <a href="{{ route('admin.role.index') }}" class="nav-card">
-        <h3>Manajemen Role</h3>
-        <p>Kelola peran atau hak akses yang tersedia dalam sistem.</p>
-    </a>
+            <a href="{{ route('admin.role.index') }}" class="nav-card">
+                <h3>Manajemen Role</h3>
+                <p>Kelola peran atau hak akses yang tersedia dalam sistem.</p>
+            </a>
 
-    <a href="{{ route('admin.ras-hewan.index') }}" class="nav-card">
-        <h3>Manajemen Ras Hewan</h3>
-        <p>Kelola data master untuk ras hewan berdasarkan jenisnya.</p>
-    </a>
+            <a href="{{ route('admin.ras-hewan.index') }}" class="nav-card">
+                <h3>Manajemen Ras Hewan</h3>
+                <p>Kelola data master untuk ras hewan berdasarkan jenisnya.</p>
+            </a>
 
-    <a href="{{ route('admin.jenis-hewan.index') }}" class="nav-card">
-        <h3>Manajemen Jenis Hewan</h3>
-        <p>Kelola data master untuk jenis-jenis hewan.</p>
-    </a>
+            <a href="{{ route('admin.jenis-hewan.index') }}" class="nav-card">
+                <h3>Manajemen Jenis Hewan</h3>
+                <p>Kelola data master untuk jenis-jenis hewan.</p>
+            </a>
 
-    <a href="{{ route('admin.pemilik.index') }}" class="nav-card">
-        <h3>Data Pemilik</h3>
-        <p>Kelola data pemilik.</p>
-    </a>
+            <a href="{{ route('admin.pemilik.index') }}" class="nav-card">
+                <h3>Data Pemilik</h3>
+                <p>Kelola data pemilik.</p>
+            </a>
 
-    <a href="{{ route('admin.pet.index') }}" class="nav-card">
-        <h3>Data Hewan Peliharaan (Pet)</h3>
-        <p>Kelola data hewan peliharaan.</p>
-    </a>
+            <a href="{{ route('admin.pet.index') }}" class="nav-card">
+                <h3>Data Hewan Peliharaan (Pet)</h3>
+                <p>Kelola data hewan peliharaan.</p>
+            </a>
 
-    <a href="{{ route('admin.kategori.index') }}" class="nav-card">
-        <h3>Data Kategori</h3>
-        <p>Kelola data kategori.</p>
-    </a>
+            <a href="{{ route('admin.kategori.index') }}" class="nav-card">
+                <h3>Data Kategori</h3>
+                <p>Kelola data kategori.</p>
+            </a>
 
-    <a href="{{ route('admin.kategoriklinis.index') }}" class="nav-card">
-        <h3>Data Kategori Klinis</h3>
-        <p>Kelola data kategori klinis.</p>
-    </a>
+            <a href="{{ route('admin.kategoriklinis.index') }}" class="nav-card">
+                <h3>Data Kategori Klinis</h3>
+                <p>Kelola data kategori klinis.</p>
+            </a>
 
-    <a href="{{ route('admin.kodetindakanterapi.index') }}" class="nav-card">
-        <h3>Data Kode Tindakan Terapi</h3>
-        <p>Kelola kode tindakan terapi.</p>
-    </a>
-</div>
+            <a href="{{ route('admin.kodetindakanterapi.index') }}" class="nav-card">
+                <h3>Data Kode Tindakan Terapi</h3>
+                <p>Kelola kode tindakan terapi.</p>
+            </a>
+        </div>
 
-    </div>
+            </div>
 
     <footer>
         <p>&copy; Copyright <?php echo date("Y"); ?> Universitas Airlangga. All Rights Reserved</p>

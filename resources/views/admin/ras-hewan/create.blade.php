@@ -1,8 +1,11 @@
 <x-teemplate title="Tambah Ras Hewan - RSHP UNAIR">
 <div class="mt-20">
-<div class="container">
+<div class="page container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <!-- <div class="col-md-8"> -->
+            <div class="page-header-centered">
+                <h1>Tambah Ras Hewan</h1>
+            </div>
             <div class="card">
                 <div class="card-header">
                     <h4>Selamat Datang</h4>

@@ -1,4 +1,4 @@
-<x-teemplate title="Tambah Data Hewan - RSHP UNAIR">
+<x-teemplate title="Edit Data Hewan - RSHP UNAIR">
     <style>
         .page-container {
             padding: 2rem;
@@ -140,6 +140,19 @@
             height: 1.25rem;
             cursor: pointer;
         }
+
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #1e40af;
+        }
     </style>
 
     <div class="page-container">
@@ -158,12 +171,17 @@
         @endif
 
         <div class="page-header">
-            <h1><i class="fas fa-paw"></i> Tambah Data Hewan</h1>
+            <h1><i class="fas fa-edit"></i> Edit Data Hewan</h1>
         </div>
 
         <div class="form-container">
-            <form action="{{ route('admin.pet.store') }}" method="POST">
+            <div class="info-box">
+                <p><i class="fas fa-info-circle"></i> Mengubah data hewan: <strong>{{ $pet->nama }}</strong></p>
+            </div>
+
+            <form action="{{ route('admin.pet.update', $pet->idpet) }}" method="POST">
                 @csrf
+                @method('PUT')
 
                 <div class="mb-4">
                     <label for="nama" class="form-label">
@@ -173,7 +191,7 @@
                         class="form-control @error('nama') is-invalid @enderror"
                         id="nama"
                         name="nama"
-                        value="{{ old('nama') }}"
+                        value="{{ old('nama', $pet->nama) }}"
                         placeholder="Masukkan nama hewan"
                         required>
                     @error('nama')
@@ -189,7 +207,7 @@
                         class="form-control @error('tanggal_lahir') is-invalid @enderror"
                         id="tanggal_lahir"
                         name="tanggal_lahir"
-                        value="{{ old('tanggal_lahir') }}"
+                        value="{{ old('tanggal_lahir', $pet->tanggal_lahir) }}"
                         max="{{ date('Y-m-d') }}"
                         required>
                     @error('tanggal_lahir')
@@ -205,7 +223,7 @@
                         class="form-control @error('warna_tanda') is-invalid @enderror"
                         id="warna_tanda"
                         name="warna_tanda"
-                        value="{{ old('warna_tanda') }}"
+                        value="{{ old('warna_tanda', $pet->warna_tanda) }}"
                         placeholder="Contoh: Putih dengan bintik hitam di dahi">
                     @error('warna_tanda')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -221,7 +239,7 @@
                             <input type="radio" 
                                 name="jenis_kelamin" 
                                 value="L" 
-                                {{ old('jenis_kelamin') == 'L' ? 'checked' : '' }}
+                                {{ old('jenis_kelamin', $pet->jenis_kelamin) == 'L' ? 'checked' : '' }}
                                 required>
                             <span><i class="fas fa-mars"></i> Jantan</span>
                         </label>
@@ -229,7 +247,7 @@
                             <input type="radio" 
                                 name="jenis_kelamin" 
                                 value="P" 
-                                {{ old('jenis_kelamin') == 'P' ? 'checked' : '' }}
+                                {{ old('jenis_kelamin', $pet->jenis_kelamin) == 'P' ? 'checked' : '' }}
                                 required>
                             <span><i class="fas fa-venus"></i> Betina</span>
                         </label>
@@ -250,7 +268,7 @@
                         <option value="">Pilih Ras Hewan</option>
                         @foreach($rasHewan as $ras)
                             <option value="{{ $ras->idras_hewan }}" 
-                                {{ old('idras_hewan') == $ras->idras_hewan ? 'selected' : '' }}>
+                                {{ old('idras_hewan', $pet->idras_hewan) == $ras->idras_hewan ? 'selected' : '' }}>
                                 {{ $ras->nama_ras }}
                             </option>
                         @endforeach
@@ -271,7 +289,7 @@
                         <option value="">Pilih Pemilik</option>
                         @foreach($pemilik as $p)
                             <option value="{{ $p->idpemilik }}" 
-                                {{ old('idpemilik') == $p->idpemilik ? 'selected' : '' }}>
+                                {{ old('idpemilik', $pet->idpemilik) == $p->idpemilik ? 'selected' : '' }}>
                                 {{ $p->nama }}
                             </option>
                         @endforeach
@@ -286,7 +304,7 @@
                         <i class="fas fa-arrow-left"></i> Kembali
                     </a>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Simpan Data
+                        <i class="fas fa-save"></i> Update Data
                     </button>
                 </div>
             </form>
