@@ -29,7 +29,7 @@
             </div>
             @endif
 
-            <form action="{{ route('admin.ras-hewan.update', $rasHewan->idras_hewan) }}" method="POST">
+            <form action="{{ route('admin.ras-hewan.update', $rasHewan->idras_hewan) }}" enctype="multipart/form-data" method="POST">
                 @csrf
                 @method('PUT')
                 

@@ -11,11 +11,16 @@ use App\Models\KodeTindakanTerapi;
 use App\Models\TemuDokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardPerawatController extends Controller
 {
     public function index() 
     {
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
         // Ambil semua data pet dengan relasi
         $pets = Pet::with(['pemilik.user', 'ras.jenisHewan'])->get();
         
@@ -29,10 +34,19 @@ class DashboardPerawatController extends Controller
         // Ambil data perawat yang sedang login
         $perawat = Perawat::where('id_user', auth()->user()->iduser)->first();
         
+        // Jika perawat belum ada di database, buat object dummy
+        if (!$perawat) {
+            $perawat = new Perawat();
+            $perawat->user = auth()->user();
+        }
+        
         // Hitung pasien hari ini berdasarkan created_at rekam medis
         $pasienHariIni = RekamMedis::whereDate('created_at', today())->count();
         
-        return view('admin.dashboard-perawat', compact('pets', 'rekamMedis', 'perawat', 'pasienHariIni'));
+        // Ambil kode tindakan untuk form
+        $tindakanList = KodeTindakanTerapi::with(['kategori', 'kategoriKlinis'])->get();
+        
+        return view('admin.dashboard-perawat', compact('pets', 'rekamMedis', 'perawat', 'pasienHariIni', 'tindakanList'));
     }
     
     public function patientDetail($id)
@@ -50,7 +64,19 @@ class DashboardPerawatController extends Controller
         ->latest('created_at')
         ->get();
         
-        return view('admin.patient-detail', compact('pet', 'rekamMedis'));
+        return response()->json([
+            'pet' => [
+                'nama' => $pet->nama,
+                'nama_ras' => $pet->ras->nama_ras ?? 'N/A',
+                'tanggal_lahir' => $pet->tanggal_lahir,
+                'jenis_kelamin' => $pet->jenis_kelamin,
+                'nama_pemilik' => $pet->pemilik->user->nama ?? 'N/A',
+                'email' => $pet->pemilik->user->email ?? 'N/A',
+                'no_wa' => $pet->pemilik->no_wa ?? 'N/A',
+                'alamat' => $pet->pemilik->alamat ?? 'N/A',
+            ],
+            'rekam_medis' => $rekamMedis
+        ]);
     }
     
     public function storeRekamMedis(Request $request)
@@ -68,12 +94,14 @@ class DashboardPerawatController extends Controller
         DB::beginTransaction();
         try {
             // Cari atau buat temu dokter untuk pet ini
+            $lastNoUrut = TemuDokter::whereDate('waktu_daftar', today())->max('no_urut') ?? 0;
+            
             $temuDokter = TemuDokter::firstOrCreate([
                 'idpet' => $request->idpet,
-                'status' => 'P', // P = Processing
+                'status' => 'A',
             ], [
                 'waktu_daftar' => now(),
-                'no_urut' => TemuDokter::whereDate('waktu_daftar', today())->max('no_urut') + 1,
+                'no_urut' => $lastNoUrut + 1,
                 'idrole_user' => auth()->user()->roleUser->first()->idrole_user ?? null,
             ]);
             
@@ -85,7 +113,11 @@ class DashboardPerawatController extends Controller
                 'idpet' => $request->idpet,
                 'idreservasi_dokter' => $temuDokter->idreservasi_dokter,
                 'dokter_pemeriksa' => auth()->user()->roleUser->first()->idrole_user ?? null,
-                'created_at' => now(),
+                'tanggal_periksa' => now(),
+                'berat_badan' => $request->berat_badan ?? 0,
+                'prognosa' => $request->prognosa ?? null,
+                'terapi' => $request->terapi ?? null,
+                'catatan' => $request->catatan ?? null,
             ]);
             
             // Simpan detail tindakan/terapi jika ada
@@ -113,45 +145,40 @@ class DashboardPerawatController extends Controller
     
     public function showRekamMedis($id)
     {
-        $rekamMedis = RekamMedis::with([
-            'pet.pemilik.user',
-            'pet.rasHewan.jenisHewan',
-            'temuDokter.roleUser.user',
-            'detailRekamMedis.kodeTindakanTerapi.kategori',
-            'detailRekamMedis.kodeTindakanTerapi.kategoriKlinis'
-        ])->findOrFail($id);
-        
-        return response()->json([
-            'idrekam_medis' => $rekamMedis->idrekam_medis,
-            'tanggal_periksa' => $rekamMedis->created_at->format('d/m/Y H:i'),
-            'pet_name' => $rekamMedis->pet->nama,
-            'pemilik' => $rekamMedis->pet->pemilik->user->nama ?? 'N/A',
-            'dokter' => $rekamMedis->temuDokter->roleUser->user->nama ?? 'N/A',
-            'anamnesa' => $rekamMedis->anamnesa,
-            'temuan_klinis' => $rekamMedis->temuan_klinis,
-            'diagnosa' => $rekamMedis->diagnosa,
-            'detail_tindakan' => $rekamMedis->detailRekamMedis->map(function($detail) {
-                return [
-                    'kode' => $detail->kodeTindakanTerapi->kode,
-                    'tindakan' => $detail->kodeTindakanTerapi->deskripsi_tindakan_terapi,
-                    'kategori' => $detail->kodeTindakanTerapi->kategori->nama_kategori ?? 'N/A',
-                    'detail' => $detail->detail,
-                ];
-            }),
-        ]);
-    }
-    
-    public function editRekamMedis($id)
-    {
-        $rekamMedis = RekamMedis::with([
-            'pet',
-            'detailRekamMedis.kodeTindakanTerapi'
-        ])->findOrFail($id);
-        
-        $pets = Pet::with('pemilik.user')->get();
-        $tindakanList = KodeTindakanTerapi::with(['kategori', 'kategoriKlinis'])->get();
-        
-        return view('admin.rekam-medis-edit', compact('rekamMedis', 'pets', 'tindakanList'));
+        try {
+            $rekamMedis = RekamMedis::with([
+                'pet.pemilik.user',
+                'pet.ras.jenisHewan',
+                'temuDokter.roleUser.user',
+                'detailRekamMedis.kodeTindakanTerapi.kategori',
+                'detailRekamMedis.kodeTindakanTerapi.kategoriKlinis'
+            ])->findOrFail($id);
+            
+            return response()->json([
+                'idrekam_medis' => $rekamMedis->idrekam_medis,
+                'tanggal_periksa' => $rekamMedis->tanggal_periksa ? date('d/m/Y H:i', strtotime($rekamMedis->tanggal_periksa)) : date('d/m/Y H:i', strtotime($rekamMedis->created_at)),
+                'nama_pet' => $rekamMedis->pet->nama ?? 'N/A',
+                'pemilik' => $rekamMedis->pet->pemilik->user->nama ?? 'N/A',
+                'dokter' => $rekamMedis->temuDokter->roleUser->user->nama ?? 'N/A',
+                'berat_badan' => $rekamMedis->berat_badan ?? '-',
+                'anamnesa' => $rekamMedis->anamnesa ?? '-',
+                'temuan_klinis' => $rekamMedis->temuan_klinis ?? '-',
+                'diagnosa' => $rekamMedis->diagnosa ?? '-',
+                'prognosa' => $rekamMedis->prognosa ?? '-',
+                'terapi' => $rekamMedis->terapi ?? '-',
+                'catatan' => $rekamMedis->catatan ?? '-',
+                'detail_tindakan' => $rekamMedis->detailRekamMedis->map(function($detail) {
+                    return [
+                        'kode' => $detail->kodeTindakanTerapi->kode ?? '-',
+                        'tindakan' => $detail->kodeTindakanTerapi->deskripsi_tindakan_terapi ?? '-',
+                        'kategori' => $detail->kodeTindakanTerapi->kategori->nama_kategori ?? 'N/A',
+                        'detail' => $detail->detail ?? '-',
+                    ];
+                }),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Gagal memuat data: ' . $e->getMessage()], 500);
+        }
     }
     
     public function updateRekamMedis(Request $request, $id)
@@ -161,6 +188,10 @@ class DashboardPerawatController extends Controller
             'temuan_klinis' => 'nullable|string',
             'diagnosa' => 'required|string',
             'tindakan' => 'nullable|array',
+            'berat_badan' => 'nullable|numeric',
+            'prognosa' => 'nullable|string',
+            'terapi' => 'nullable|string',
+            'catatan' => 'nullable|string',
         ]);
         
         DB::beginTransaction();
@@ -171,6 +202,10 @@ class DashboardPerawatController extends Controller
                 'anamnesa' => $request->anamnesa,
                 'temuan_klinis' => $request->temuan_klinis,
                 'diagnosa' => $request->diagnosa,
+                'berat_badan' => $request->berat_badan,
+                'prognosa' => $request->prognosa,
+                'terapi' => $request->terapi,
+                'catatan' => $request->catatan,
             ]);
             
             // Hapus detail lama dan buat yang baru
@@ -222,7 +257,7 @@ class DashboardPerawatController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:500',
-            'email' => 'required|email|max:200',
+            'email' => 'required|email|max:200|unique:user,email,' . auth()->user()->iduser . ',iduser',
             'no_hp' => 'nullable|string|max:45',
             'alamat' => 'nullable|string|max:100',
             'jenis_kelamin' => 'nullable|in:L,P',

@@ -32,7 +32,7 @@
         <div class="mb-3">
             <!-- Tombol untuk tambah kategori klinis baru -->
             <form action="{{ route('admin.kodetindakanterapi.create') }}" method="GET" style="display: inline;">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" >
                     <i class="fas fa-plus"></i> Tambah Kode Tindakan Baru
                 </button>
             </form>

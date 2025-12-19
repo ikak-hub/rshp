@@ -1,7 +1,7 @@
-@extends('layouts.app')
-@section('title', 'Tambah Pemilik Baru')
-@section('content')
-<div class="container">
+<x-teemplate title="Tambah Pemilik Baru - RSHP UNAIR">
+<div class="mt-20">
+    <div class="container mx-auto max-w-2xl">
+    <h1 class="text-center font-bold text-3xl mb-10">Tambah Pemilik Baru</h1>
     <div class="row justify-content-center">
         <div class="col-md-8">  
             <div class="card">
@@ -19,6 +19,32 @@
                         @csrf
 
                         <div class="mb-3">
+                            <label for="nama" class="form-label">Nama Pemilik<span class="text-danger">*</span></label>
+                            <input type="text" 
+                                class="form-control @error('nama') is-invalid @enderror"
+                                id="nama"
+                                name="nama"
+                                value="{{ old('nama') }}"
+                                placeholder="Masukkan nama pemilik"
+                                required>
+                            @error('nama')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+                            <input type="email" 
+                                class="form-control @error('email') is-invalid @enderror"
+                                id="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                placeholder="Masukkan email"
+                                required>
+                            @error('email')
+                                <div class="invalid-feedback">
+                                    {{ $message }}  
+                                </div>
+                            @enderror
                             <label for="no_wa" class="form-label">No WA<span class="text-danger">*</span></label>
                             <input type="text" 
                                 class="form-control @error('no_wa') is-invalid @enderror"
@@ -28,6 +54,19 @@
                                 placeholder="Masukkan no wa"
                                 required>
                             @error('no_wa')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        <label for="alamat" class="form-label">Alamat<span class="text-danger">*</span></label>
+                            <input type="text" 
+                                class="form-control @error('alamat') is-invalid @enderror"
+                                id="alamat"
+                                name="alamat"
+                                value="{{ old('alamat') }}"
+                                placeholder="Masukkan alamat"
+                                required>
+                            @error('alamat')
                                 <div class="invalid-feedback">
                                     {{ $message }}
                                 </div>
@@ -48,4 +87,4 @@
         </div>
     </div>
 </div>
-@endsection
+</x-teemplate>

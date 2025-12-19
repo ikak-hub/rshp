@@ -1,11 +1,10 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
+<x-template-login title="Login">
+<div class="page container">
+    <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="card-header">{{ __('Silahkan Login') }}</div>
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
@@ -70,4 +69,4 @@
         </div>
     </div>
 </div>
-@endsection
+</x-teemplate>

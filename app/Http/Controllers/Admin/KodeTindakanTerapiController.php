@@ -58,10 +58,13 @@ class KodeTindakanTerapiController extends Controller
         compact(['kodeTindakanTerapi', 'kategories', 'kategoriKlinises'])
     );
     }
-    public function create()
-    {
-        return view('admin.kodetindakanterapi.create');
-    }
+    // public function create()
+    // {
+    //     $kategories = DB::table('kategori')->select('*')->get();
+    //     $kategoriKlinises = DB::table('kategori_klinis')->select('*')->get();
+
+    //     return view('admin.kodetindakanterapi.create', compact('kategories', 'kategoriKlinises'));
+    // }
     public function store(Request $request)
     {
         // validasi input

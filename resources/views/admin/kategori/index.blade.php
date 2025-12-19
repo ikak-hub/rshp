@@ -1,8 +1,7 @@
 <x-teemplate title="Manajemen Kategori - RSHP UNAIR">
-
 <div class="page-container">
     <div class="page-header">
-        <h1>Manajemen Data Jenis Hewan</h1>
+        <h1>Manajemen kategori</h1>
     </div>
 
     @if (session('success'))

@@ -32,6 +32,8 @@
             <thead>
                 <tr>
                     <th>No.</th>
+                    <th>idras_hewan</th>
+                    <th>Nama Jenis Hewan</th>
                     <th>Nama Ras Hewan</th>
                     <th>Aksi</th>
                 </tr>
@@ -40,6 +42,8 @@
                 @foreach ($RasHewan as $index => $hewan)
                 <tr>
                     <td>{{ $index + 1 }}</td>
+                    <td>{{ $hewan->idras_hewan }}</td>
+                    <td>{{ $hewan->nama_jenis_hewan }}</td>
                     <td>{{ $hewan->nama_ras }}</td>
                     <td>
                         <button type="button" class="btn btn-sm btn-warning" onclick="window.location='{{ route('admin.ras-hewan.edit', ['id' => $hewan->idras_hewan]) }}'">

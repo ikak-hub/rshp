@@ -4,7 +4,7 @@
     <div class="container mx-auto max-w-2xl">
         <h1 class="text-center font-bold text-3xl mb-10">Edit Jenis Hewan</h1>
 
-        <x-logger :object="$jenisHewan" />
+        <!-- <x-logger :object="$jenisHewan" /> -->
         
         <div class="bg-white shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
             @if ($errors->any())

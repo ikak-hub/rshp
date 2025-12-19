@@ -11,92 +11,191 @@ class PemilikController extends Controller
 {
     public function index()
     {
-        // Eloquent
-        // $pemilik = Pemilik::with('user')->get();
-
-        // Query Builder
+        // Query Builder dengan alias yang benar
         $pemilik = DB::table('pemilik')
-        ->select(
-            'pemilik.idpemilik',
-            'pemilik.no_wa', // Ditambahkan prefix 'pemilik.' untuk kejelasan
-            'pemilik.alamat', // Ditambahkan prefix 'pemilik.' untuk kejelasan
-            'user.nama as nama_pemilik' // Mengambil nama dari tabel user dan memberi alias
-        )
-        // Kunci 'pemilik.iduser' (FK) harus dihubungkan dengan 'user.id' (PK)
-        ->join('user', 'pemilik.iduser', '=', 'user.iduser') 
-        ->get();
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->select(
+                'pemilik.idpemilik',
+                'pemilik.no_wa',
+                'pemilik.alamat',
+                'user.nama as nama_pemilik', // Pastikan menggunakan alias
+                'user.email',
+                'user.iduser'
+            )
+            ->get();
 
         return view('admin.pemilik.index', compact('pemilik'));
     }
+
     public function create()
     {
         return view('admin.pemilik.create');
     }
+
     public function store(Request $request)
     {   
-            // validasi input
-            $validatedData = $this->validatePemilik($request);
+        // validasi input
+        $validatedData = $this->validatePemilik($request);
 
-            // helper function untuk menyimpan data
-            $pemilik = $this->createPemilik($validatedData);
+        // helper function untuk menyimpan data
+        $pemilik = $this->createPemilik($validatedData);
 
-            return redirect()->route('admin.pemilik.index')
-                            ->with('success', 'Pemilik berhasil ditambahkan.');
+        return redirect()->route('admin.pemilik.index')
+                        ->with('success', 'Pemilik berhasil ditambahkan.');
     }
+
+    public function edit($id)
+    {
+        // Ambil data pemilik dengan join user
+        $pemilik = DB::table('pemilik')
+            ->join('user', 'pemilik.iduser', '=', 'user.iduser')
+            ->where('pemilik.idpemilik', $id)
+            ->select(
+                'pemilik.*',
+                'user.nama as nama_pemilik',
+                'user.email'
+            )
+            ->first();
+
+        if (!$pemilik) {
+            return redirect()->route('admin.pemilik.index')
+                ->with('error', 'Data pemilik tidak ditemukan');
+        }
+
+        return view('admin.pemilik.edit', compact('pemilik'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Ambil data pemilik untuk mendapatkan iduser
+        $pemilik = DB::table('pemilik')->where('idpemilik', $id)->first();
+        
+        if (!$pemilik) {
+            return redirect()->route('admin.pemilik.index')
+                ->with('error', 'Data pemilik tidak ditemukan');
+        }
+
+        // Validasi dengan mengecualikan email user saat ini
+        $request->validate([
+            'nama' => 'required|string|max:100',
+            'email' => 'required|email|unique:user,email,' . $pemilik->iduser . ',iduser',
+            'no_wa' => 'required|string|max:45',
+            'alamat' => 'required|string|max:100',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            // Update user
+            DB::table('user')
+                ->where('iduser', $pemilik->iduser)
+                ->update([
+                    'nama' => $request->nama,
+                    'email' => $request->email,
+                ]);
+
+            // Update pemilik
+            DB::table('pemilik')
+                ->where('idpemilik', $id)
+                ->update([
+                    'no_wa' => $request->no_wa,
+                    'alamat' => $request->alamat,
+                ]);
+
+            DB::commit();
+            return redirect()->route('admin.pemilik.index')
+                ->with('success', 'Pemilik berhasil diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Gagal memperbarui pemilik: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
     protected function validatePemilik(Request $request, $id = null)
     {
         // data yang bersifat uniq
         $uniqueRule = $id ?
-        'unique:pemilik,no_wa,'. $id .',idpemilik': 
-        'unique:pemilik,no_wa';
+            'unique:pemilik,no_wa,' . $id . ',idpemilik' : 
+            'unique:pemilik,no_wa';
 
         // validasi input
         return $request->validate([
+            'nama' => 'required|string|max:100',
+            'email' => 'required|email|unique:user,email',
             'no_wa' => [
                 'required',
                 'string',
-                'max:255',
-                'min:3', 
+                'max:45',
                 $uniqueRule
             ],
-        ],[
+            'alamat' => 'required|string|max:100',
+        ], [
+            'nama.required' => 'Nama wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.unique' => 'Email sudah terdaftar.',
             'no_wa.required' => 'No WA wajib diisi.',
-            'no_wa.string' => 'No WA harus berupa teks.',
-            'no_wa.max' => 'No WA tidak boleh lebih dari 255 karakter.',
-            'no_wa.min' => 'No WA minimal 3 karakter.',
             'no_wa.unique' => 'No WA sudah ada dalam database.',
+            'alamat.required' => 'Alamat wajib diisi.',
         ]); 
     }
+
     //helper untuk membuat data baru
     protected function createPemilik(array $data)
     {
-        try{
-            // Eloquent
-            // return Pemilik::create([
-            //     'no_wa' => $data['no_wa'],
-            //     'alamat' => $data['alamat'],
-            // ]);
+        try {
+            DB::beginTransaction();
 
-            // Query Builder
+            // Insert user terlebih dahulu
+            $iduser = DB::table('user')->insertGetId([
+                'nama' => $data['nama'],
+                'email' => $data['email'],
+                'password' => bcrypt('password123'), // default password
+            ]);
+
+            // Insert pemilik dengan iduser yang baru dibuat
             $pemilik = DB::table('pemilik')->insert([
-                'iduser' => '1', // sementara di set 1, nanti diubah sesuai user yang login
+                'iduser' => $iduser,
                 'no_wa' => $data['no_wa'],
                 'alamat' => $data['alamat'],
             ]);
 
-        return $pemilik;
-        } catch (\Exception $e){
-            // tangani error jika diperlukan
+            DB::commit();
+            return $pemilik;
+        } catch (\Exception $e) {
+            DB::rollBack();
             throw new \Exception('Gagal menyimpan pemilik: ' . $e->getMessage());
         }
     } 
-    // helper untuk format nama menjadi titlr case
-    protected function formatNamaPemilik($nama)
+
+    public function destroy($id)
     {
-        return trim(ucwords(strtolower($nama)));
-    }
-    public function destroy(Request $request)
-    {
-        $id = $request->param('id');
+        try {
+            // Ambil data pemilik untuk mendapatkan iduser
+            $pemilik = DB::table('pemilik')->where('idpemilik', $id)->first();
+            
+            if (!$pemilik) {
+                return redirect()->route('admin.pemilik.index')
+                    ->with('error', 'Data pemilik tidak ditemukan');
+            }
+
+            DB::beginTransaction();
+
+            // Hapus pemilik
+            DB::table('pemilik')->where('idpemilik', $id)->delete();
+
+            // Hapus user terkait (opsional, tergantung business logic)
+            // DB::table('user')->where('iduser', $pemilik->iduser)->delete();
+
+            DB::commit();
+            
+            return redirect()->route('admin.pemilik.index')
+                ->with('success', 'Pemilik berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('admin.pemilik.index')
+                ->with('error', 'Gagal menghapus pemilik: ' . $e->getMessage());
+        }
     }
 }
