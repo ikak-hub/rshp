@@ -256,8 +256,8 @@
                                 </span>
                             @endif
                         </td>
-                        <td>{{ $item->ras->nama_ras ?? 'N/A' }}</td>
-                        <td>{{ $item->pemilik->user->nama ?? 'N/A' }}</td>
+                        <td>{{ $item->nama_ras ?? 'N/A' }}</td>
+                        <td>{{ $item->nama_pemilik ?? 'N/A' }}</td>
                         <td>
                             <div class="action-buttons">
                                 <a href="{{ route('admin.pet.edit', $item->idpet) }}" 
