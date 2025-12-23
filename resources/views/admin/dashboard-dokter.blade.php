@@ -149,7 +149,10 @@
                 <a class="nav-link" data-section="patients">
                     <i class="bi bi-heart-pulse"></i> Data Pasien
                 </a>
-                <a href="{{ route('admin.rekam-medis.create', $apt->idreservasi_dokter) }}" 
+                <a class="nav-link" data-section="medical-records">
+                    <i class="bi bi-clipboard-data"></i> Rekam Medis
+                </a>
+                <a href="{{ route('dokter.rekam-medis.create') }}" 
                 class="btn btn-sm btn-custom">
                     <i class="bi bi-clipboard-plus"></i> Mulai Pemeriksaan
                 </a>

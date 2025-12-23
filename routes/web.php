@@ -120,21 +120,19 @@ Route::middleware('isResepsionis')->group(function(){
     Route::put('/resepsionis/appointment/{id}/cancel', [App\Http\Controllers\Resepsionis\DashboardResepsionisController::class, 'cancelAppointment'])->name('resepsionis.appointment.cancel');
 });
 
-// akses dokter
+// Akses dokter
 Route::middleware('isDokter')->group(function(){
     Route::get('/dokter/dashboard', [App\Http\Controllers\Admin\DashboardDokterController::class, 'index'])->name('dokter.dashboard');
-    Route::get('/dokter/rekam-medis', [App\Http\Controllers\Admin\DashboardDokterController::class, 'rekamMedisList'])->name('dokter.rekam-medis.list');
+    
     // Patient Routes
     Route::get('/dokter/patient/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'patientDetail'])->name('dokter.patient.detail');
-    
-    // Appointment Routes
-    Route::get('/dokter/appointments', [App\Http\Controllers\Admin\DashboardDokterController::class, 'appointments'])->name('dokter.appointments');
+    Route::get('/dokter/patient/{id}/records', [App\Http\Controllers\Admin\DashboardDokterController::class, 'patientRecords'])->name('dokter.patient.records');
     
     // Rekam Medis CRUD
-    Route::get('/dokter/rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'viewRekamMedis'])->name('dokter.rekam-medis.view');
-    Route::get('/dokter/rekam-medis/create/{idreservasi}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'createRekamMedis'])->name('dokter.rekam-medis.create');
+    Route::get('/dokter/rekam-medis/create/{idreservasi?}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'createRekamMedis'])->name('dokter.rekam-medis.create');
     Route::post('/dokter/rekam-medis/store', [App\Http\Controllers\Admin\DashboardDokterController::class, 'storeRekamMedis'])->name('dokter.rekam-medis.store');
-    Route::put('/dokter/rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'updateRekamMedis'])->name('dokter.rekam-medis.update');
+    Route::get('/dokter/rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'viewRekamMedis'])->name('dokter.rekam-medis.view');
+    Route::delete('/dokter/rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'destroyRekamMedis'])->name('dokter.rekam-medis.destroy');
     
     // Detail Rekam Medis CRUD
     Route::post('/dokter/detail-rekam-medis', [App\Http\Controllers\Admin\DashboardDokterController::class, 'storeDetailRekamMedis'])->name('dokter.detail-rekam-medis.store');
@@ -142,7 +140,7 @@ Route::middleware('isDokter')->group(function(){
     Route::put('/dokter/detail-rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'updateDetailRekamMedis'])->name('dokter.detail-rekam-medis.update');
     Route::delete('/dokter/detail-rekam-medis/{id}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'destroyDetailRekamMedis'])->name('dokter.detail-rekam-medis.destroy');
     
-    // Get Tindakan/Terapi
+    // Get Kode Tindakan/Terapi
     Route::get('/dokter/kode-tindakan/{kategori?}', [App\Http\Controllers\Admin\DashboardDokterController::class, 'getKodeTindakan'])->name('dokter.kode-tindakan');
     
     // Profile Routes
