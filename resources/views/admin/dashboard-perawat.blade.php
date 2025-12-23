@@ -274,10 +274,10 @@ body {
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <button class="btn btn-info text-white" onclick="viewRecord({{ $rm->idrekam_medis }})">
-                                                <i class="bi bi-eye"></i>
+                                                <i class="bi bi-eye">Detail Rekam medis</i>
                                             </button>
                                             <button class="btn btn-warning" onclick="editRecord({{ $rm->idrekam_medis }})">
-                                                <i class="bi bi-pencil"></i>
+                                                <i class="bi bi-pencil">Update</i>
                                             </button>
                                             <form action="{{ route('perawat.rekam-medis.destroy', $rm->idrekam_medis) }}" 
                                                   method="POST" class="d-inline"
@@ -285,7 +285,7 @@ body {
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
-                                                    <i class="bi bi-trash"></i>
+                                                    <i class="bi bi-trash">Delete</i>
                                                 </button>
                                             </form>
                                         </div>
